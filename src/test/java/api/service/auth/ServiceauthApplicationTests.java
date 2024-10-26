@@ -50,7 +50,7 @@ public class ServiceauthApplicationTests {
         User user = new User();
         user.setName("John Doe");
         user.setEmail("john.doe@example.com");
-        userRepository.save(user); // Save user to the database
+        userRepository.save(user);
 
         mockMvc.perform(get("/api/auth/users"))
                 .andExpect(status().isOk())
