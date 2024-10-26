@@ -3,7 +3,10 @@ package api.service.auth.controller;
 import java.util.List;
 import java.util.Optional;
 
+import api.service.auth.repository.UserRepository;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,6 +48,8 @@ public class GlobalAuthController {
 
     @Autowired
     private SessionService sessionService;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/health")
     public ResponseEntity<String> healthCheck() {
@@ -52,7 +57,6 @@ public class GlobalAuthController {
 }
 
 
-    // Gestion des utilisateurs (User)
     @Operation(summary = "Create a new user", description = "Creates a new user in the system")
     @ApiResponse(responseCode = "200", description = "User created successfully")
     @ApiResponse(responseCode = "400", description = "Invalid input")
@@ -72,11 +76,14 @@ public class GlobalAuthController {
     }
 
     @Operation(summary = "Get all users", description = "Retrieves a list of all users")
-    @ApiResponse(responseCode = "200", description = "List of users retrieved successfully")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of users retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "No users found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.findAllUsers();
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(userRepository.findAll());
     }
 
     @Operation(summary = "Update user", description = "Updates the details of an existing user")
