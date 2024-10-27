@@ -2,33 +2,25 @@ package api.service.auth.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import api.service.auth.repository.UserRepository;
+import api.service.auth.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import api.service.auth.entity.LoginAttempt;
-import api.service.auth.entity.Permission;
-import api.service.auth.entity.Role;
-import api.service.auth.entity.Session;
-import api.service.auth.entity.User;
 import api.service.auth.service.LoginAttemptService;
 import api.service.auth.service.PermissionService;
 import api.service.auth.service.RoleService;
 import api.service.auth.service.SessionService;
 import api.service.auth.service.UserService;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Authentication API", description = "APIs for user authentication, roles, permissions, and sessions management")
 public class GlobalAuthController {
 
     @Autowired
@@ -45,33 +37,36 @@ public class GlobalAuthController {
 
     @Autowired
     private SessionService sessionService;
-    @Autowired
-    private UserRepository userRepository;
 
     @GetMapping("/health")
+    @Operation(summary = "Health Check", description = "Check if the authentication API is running")
     public ResponseEntity<String> healthCheck() {
-    return ResponseEntity.ok("Authentication API is up and running");
-}
+        return ResponseEntity.ok("Authentication API is up and running");
+    }
 
     @PostMapping("/users")
+    @Operation(summary = "Create User", description = "Create a new user")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User createdUser = userService.saveUser(user);
         return ResponseEntity.ok(createdUser);
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    @Operation(summary = "Get User by ID", description = "Retrieve user details by user ID")
+    public ResponseEntity<User> getUserById(@Parameter(description = "ID of the user to be retrieved") @PathVariable Long id) {
         Optional<User> user = userService.findUserById(id);
         return user.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/users")
+    @Operation(summary = "Get All Users", description = "Retrieve a list of all users")
     public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userRepository.findAll());
+        return ResponseEntity.ok(userService.findAllUsers());
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
+    @Operation(summary = "Update User", description = "Update user details by user ID")
+    public ResponseEntity<User> updateUser(@Parameter(description = "ID of the user to be updated") @PathVariable Long id, @RequestBody User userDetails) {
         Optional<User> userOptional = userService.findUserById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -86,25 +81,29 @@ public class GlobalAuthController {
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    @Operation(summary = "Delete User", description = "Delete a user by user ID")
+    public ResponseEntity<Void> deleteUser(@Parameter(description = "ID of the user to be deleted") @PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/roles")
+    @Operation(summary = "Create Role", description = "Create a new role")
     public ResponseEntity<Role> createRole(@RequestBody Role role) {
         Role createdRole = roleService.saveRole(role);
         return ResponseEntity.ok(createdRole);
     }
 
     @GetMapping("/roles")
+    @Operation(summary = "Get All Roles", description = "Retrieve a list of all roles")
     public ResponseEntity<List<Role>> getAllRoles() {
         List<Role> roles = roleService.findAllRoles();
         return ResponseEntity.ok(roles);
     }
 
     @PutMapping("/roles/{id}")
-    public ResponseEntity<Role> updateRole(@PathVariable Long id, @RequestBody Role roleDetails) {
+    @Operation(summary = "Update Role", description = "Update a role by ID")
+    public ResponseEntity<Role> updateRole(@Parameter(description = "ID of the role to be updated") @PathVariable Long id, @RequestBody Role roleDetails) {
         Optional<Role> roleOptional = roleService.findRoleById(id);
         if (roleOptional.isPresent()) {
             Role role = roleOptional.get();
@@ -117,25 +116,29 @@ public class GlobalAuthController {
     }
 
     @DeleteMapping("/roles/{id}")
-    public ResponseEntity<Void> deleteRole(@PathVariable Long id) {
+    @Operation(summary = "Delete Role", description = "Delete a role by ID")
+    public ResponseEntity<Void> deleteRole(@Parameter(description = "ID of the role to be deleted") @PathVariable Long id) {
         roleService.deleteRole(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/permissions")
+    @Operation(summary = "Create Permission", description = "Create a new permission")
     public ResponseEntity<Permission> createPermission(@RequestBody Permission permission) {
         Permission createdPermission = permissionService.savePermission(permission);
         return ResponseEntity.ok(createdPermission);
     }
 
     @GetMapping("/permissions")
+    @Operation(summary = "Get All Permissions", description = "Retrieve a list of all permissions")
     public ResponseEntity<List<Permission>> getAllPermissions() {
         List<Permission> permissions = permissionService.findAllPermissions();
         return ResponseEntity.ok(permissions);
     }
 
     @PutMapping("/permissions/{id}")
-    public ResponseEntity<Permission> updatePermission(@PathVariable Long id, @RequestBody Permission permissionDetails) {
+    @Operation(summary = "Update Permission", description = "Update a permission by ID")
+    public ResponseEntity<Permission> updatePermission(@Parameter(description = "ID of the permission to be updated") @PathVariable Long id, @RequestBody Permission permissionDetails) {
         Optional<Permission> permissionOptional = permissionService.findPermissionById(id);
         if (permissionOptional.isPresent()) {
             Permission permission = permissionOptional.get();
@@ -148,43 +151,50 @@ public class GlobalAuthController {
     }
 
     @DeleteMapping("/permissions/{id}")
-    public ResponseEntity<Void> deletePermission(@PathVariable Long id) {
+    @Operation(summary = "Delete Permission", description = "Delete a permission by ID")
+    public ResponseEntity<Void> deletePermission(@Parameter(description = "ID of the permission to be deleted") @PathVariable Long id) {
         permissionService.deletePermission(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/login-attempts")
+    @Operation(summary = "Create Login Attempt", description = "Create a new login attempt")
     public ResponseEntity<LoginAttempt> createLoginAttempt(@RequestBody LoginAttempt loginAttempt) {
         LoginAttempt createdLoginAttempt = loginAttemptService.saveLoginAttempt(loginAttempt);
         return ResponseEntity.ok(createdLoginAttempt);
     }
 
     @GetMapping("/login-attempts")
+    @Operation(summary = "Get All Login Attempts", description = "Retrieve a list of all login attempts")
     public ResponseEntity<List<LoginAttempt>> getAllLoginAttempts() {
         List<LoginAttempt> loginAttempts = loginAttemptService.findAllLoginAttempts();
         return ResponseEntity.ok(loginAttempts);
     }
 
     @DeleteMapping("/login-attempts/{id}")
-    public ResponseEntity<Void> deleteLoginAttempt(@PathVariable Long id) {
+    @Operation(summary = "Delete Login Attempt", description = "Delete a login attempt by ID")
+    public ResponseEntity<Void> deleteLoginAttempt(@Parameter(description = "ID of the login attempt to be deleted") @PathVariable Long id) {
         loginAttemptService.deleteLoginAttempt(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/sessions")
+    @Operation(summary = "Create Session", description = "Create a new session")
     public ResponseEntity<Session> createSession(@RequestBody Session session) {
         Session createdSession = sessionService.saveSession(session);
         return ResponseEntity.ok(createdSession);
     }
 
     @GetMapping("/sessions")
+    @Operation(summary = "Get All Sessions", description = "Retrieve a list of all sessions")
     public ResponseEntity<List<Session>> getAllSessions() {
         List<Session> sessions = sessionService.findAllSessions();
         return ResponseEntity.ok(sessions);
     }
 
     @DeleteMapping("/sessions/{id}")
-    public ResponseEntity<Void> deleteSession(@PathVariable Long id) {
+    @Operation(summary = "Delete Session", description = "Delete a session by ID")
+    public ResponseEntity<Void> deleteSession(@Parameter(description = "ID of the session to be deleted") @PathVariable Long id) {
         sessionService.deleteSession(id);
         return ResponseEntity.noContent().build();
     }
