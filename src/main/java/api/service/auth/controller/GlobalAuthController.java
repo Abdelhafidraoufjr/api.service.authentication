@@ -2,7 +2,6 @@ package api.service.auth.controller;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import api.service.auth.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;

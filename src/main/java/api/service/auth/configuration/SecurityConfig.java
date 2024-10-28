@@ -18,12 +18,12 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/swagger-resources/**",
                                 "/webjars/**",
-                                "/api/auth/**"
+                                "/api/auth/**",
+                                "/actuator/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .csrf(csrf -> csrf.disable());   // Désactive la protection CSRF
-
+                .csrf(csrf -> csrf.disable());
         return http.build();
     }
 }
