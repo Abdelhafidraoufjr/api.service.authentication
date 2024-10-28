@@ -1,59 +1,20 @@
-1. GET /api/auth/health
-   - Vérifie si l'API d'authentification est en fonctionnement.
-
-2. POST /api/auth/users
-   - Crée un nouvel utilisateur.
-
-3. GET /api/auth/users/{id}
-   - Récupère les détails d'un utilisateur par ID.
-
-4. GET /api/auth/users
-   - Récupère une liste de tous les utilisateurs.
-
-5. PUT /api/auth/users/{id}
-   - Met à jour les détails d'un utilisateur par ID.
-
-6. DELETE /api/auth/users/{id}
-   - Supprime un utilisateur par ID.
-
-7. POST /api/auth/roles
-   - Crée un nouveau rôle.
-
-8. GET /api/auth/roles
-   - Récupère une liste de tous les rôles.
-
-9. PUT /api/auth/roles/{id}
-   - Met à jour un rôle par ID.
-
-10. DELETE /api/auth/roles/{id}
-    - Supprime un rôle par ID.
-
-11. POST /api/auth/permissions
-    - Crée une nouvelle permission.
-
-12. GET /api/auth/permissions
-    - Récupère une liste de toutes les permissions.
-
-13. PUT /api/auth/permissions/{id}
-    - Met à jour une permission par ID.
-
-14. DELETE /api/auth/permissions/{id}
-    - Supprime une permission par ID.
-
-15. POST /api/auth/login-attempts
-    - Crée une nouvelle tentative de connexion.
-
-16. GET /api/auth/login-attempts
-    - Récupère une liste de toutes les tentatives de connexion.
-
-17. DELETE /api/auth/login-attempts/{id}
-    - Supprime une tentative de connexion par ID.
-
-18. POST /api/auth/sessions
-    - Crée une nouvelle session.
-
-19. GET /api/auth/sessions
-    - Récupère une liste de toutes les sessions.
-
-20. DELETE /api/auth/sessions/{id}
-    - Supprime une session par ID.
+GET http://localhost:8080/api/auth/health
+POST http://localhost:8080/api/auth/users
+GET http://localhost:8080/api/auth/users/{id}
+GET http://localhost:8080/api/auth/users
+PUT http://localhost:8080/api/auth/users/{id}
+DELETE http://localhost:8080/api/auth/users/{id}
+POST http://localhost:8080/api/auth/roles
+GET http://localhost:8080/api/auth/roles
+PUT http://localhost:8080/api/auth/roles/{id}
+DELETE http://localhost:8080/api/auth/roles/{id}
+POST http://localhost:8080/api/auth/permissions
+GET http://localhost:8080/api/auth/permissions
+PUT http://localhost:8080/api/auth/permissions/{id}
+DELETE http://localhost:8080/api/auth/permissions/{id}
+POST http://localhost:8080/api/auth/login-attempts
+GET http://localhost:8080/api/auth/login-attempts
+DELETE http://localhost:8080/api/auth/login-attempts/{id}
+POST http://localhost:8080/api/auth/sessions
+GET http://localhost:8080/api/auth/sessions
+DELETE http://localhost:8080/api/auth/sessions/{id}
